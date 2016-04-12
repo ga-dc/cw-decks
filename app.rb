@@ -1,8 +1,18 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'pony'
+require 'bitly'
+require 'pry'
+
 require_relative './env.rb'
 include FileUtils::Verbose
+
+Bitly.use_api_version_3
+
+Bitly.configure do |config|
+  config.api_version = 3
+  config.access_token = TOKEN
+end
 
 get '/' do
   erb :index
@@ -13,6 +23,10 @@ post '/decks' do
   filename = params[:file][:filename]
   cp(tempfile.path, "public/uploads/#{filename}")
   @url = "#{request.base_url}/uploads/#{filename}"
+  begin
+    @url = Bitly.client.shorten(@url).short_url
+  rescue
+  end
   Pony.mail(
     :to => params[:instructor_email],
     :cc => params[:producer_email],
@@ -21,7 +35,7 @@ post '/decks' do
       :address => 'smtp.gmail.com',
       :port => '587',
       :enable_starttls_auto => true,
-      :user_name => 'GA@generalassemb.ly',
+      :user_name => 'gadccw@gmail.com',
       :password => PASSWORD,
       :authentication => :plain, # :plain, :login, :cram_md5, no auth by default
       :domain => "HELO", # don't know exactly what should be here
