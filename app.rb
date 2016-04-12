@@ -22,6 +22,7 @@ post '/decks' do
   tempfile = params[:file][:tempfile]
   filename = params[:file][:filename]
   cp(tempfile.path, "public/uploads/#{filename}")
+  chmod 0644, "public/uploads/#{filename}"
   @url = "#{request.base_url}/uploads/#{filename}"
   begin
     @url = Bitly.client.shorten(@url).short_url
