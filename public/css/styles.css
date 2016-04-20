@@ -1,0 +1,14 @@
+*{
+  box-sizing: border-box;
+}
+
+section, footer{
+  margin:0;
+  padding:2em;
+}
+
+footer
+{
+  background:#222;
+  color:#a2a2a2;
+}
