@@ -50,7 +50,7 @@ post '/decks' do
     }
   )
   Pony.mail(
-    :to => 'jesse@ga.co',
+    :to => 'claires@ga.co',
     :via => :smtp,
     :via_options => {
       :address => 'smtp.gmail.com',
