@@ -15,6 +15,7 @@ Bitly.configure do |config|
 end
 
 get '/' do
+  @coreid = params[:coreid]
   erb :index
 end
 
@@ -23,6 +24,7 @@ post '/decks' do
   filename = params[:file][:filename]
   cp(tempfile.path, "public/uploads/#{filename}")
   chmod 0644, "public/uploads/#{filename}"
+  @coreid = params[:coreid]
   @url = "#{request.base_url}/uploads/#{filename}"
   begin
     @url = Bitly.client.shorten(@url).short_url
@@ -43,6 +45,24 @@ post '/decks' do
     },
     :subject => 'Class & Workshop Deck',
     :body => erb(:thanks),
+    :headers => {
+      'Content-Type' => 'text/html'
+    }
+  )
+  Pony.mail(
+    :to => 'jesse@ga.co',
+    :via => :smtp,
+    :via_options => {
+      :address => 'smtp.gmail.com',
+      :port => '587',
+      :enable_starttls_auto => true,
+      :user_name => 'gadccw@gmail.com',
+      :password => PASSWORD,
+      :authentication => :plain, # :plain, :login, :cram_md5, no auth by default
+      :domain => "HELO", # don't know exactly what should be here
+    },
+    :subject => 'Class & Workshop Deck',
+    :body => erb(:admin),
     :headers => {
       'Content-Type' => 'text/html'
     }

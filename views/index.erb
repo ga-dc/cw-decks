@@ -1,11 +1,19 @@
+<% if @coreid %>
+<p>Use this form to generate a short URL link to your deck and inform your producer!</p>
 <form method="post" enctype="multipart/form-data" action="/decks">
+  <input type='hidden' name='coreid' value='<%= @coreid %>'>
   <input type='email' required placeholder='Your Email Address' name="instructor_email"><br>
   <input type='email' required placeholder='Producer’s Email Address' name="producer_email"><br>
   <label>
     Your slide deck
-    <input type='file' name='file'>
+    <input type='file' name='file' required>
   </label>
   <br>
   <input type="submit" value="Submit">
 </form>
+<% else %>
+<form>
+<input type='text' name='coreid' placeholder="core id">
+</form>
+<% end %>
 
